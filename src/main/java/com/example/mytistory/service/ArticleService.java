@@ -12,6 +12,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
+    // 블로그 글 추가
     public Article save(AddArticleRequest request){
         return articleRepository.save(request.toEntity());
     }
