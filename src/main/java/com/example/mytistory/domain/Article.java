@@ -29,7 +29,7 @@ public class Article {
     @Column(name = "category", nullable = false)
     private String category;
 
-    @Column(name = "postTime", nullable = false)
+    @Column(name = "postTime")
     private LocalDateTime postTime;
 
     @Builder
