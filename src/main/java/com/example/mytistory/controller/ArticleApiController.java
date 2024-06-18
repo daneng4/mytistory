@@ -44,6 +44,14 @@ public class ArticleApiController {
             .body(articles);
     }
 
+    @GetMapping("/api/articles/{id}")
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable Long id){
+        Article article = articleService.findById(id);
+
+        return ResponseEntity.ok()
+            .body(new ArticleResponse(article));
+    }
+
     @PutMapping("/api/articles/{id}")
     public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody
         UpdateArticleRequest request){
