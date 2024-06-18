@@ -1,7 +1,6 @@
 package com.example.mytistory.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,10 +12,7 @@ import com.example.mytistory.dto.AddArticleRequest;
 import com.example.mytistory.dto.UpdateArticleRequest;
 import com.example.mytistory.repository.ArticleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -113,6 +108,34 @@ class ArticleApiControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].title").value(title))
             .andExpect(jsonPath("$[0].category").value(category));
+    }
+
+    @DisplayName("findArticle: 단일 블로그 글 조회에 성공한다.")
+    @Test
+    public void findArticle() throws Exception{
+        // given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+        final String category = "category";
+        final LocalDateTime time = LocalDateTime.now();
+
+        Article savedArticle = articleRepository.save(Article.builder()
+            .title(title)
+            .category(category)
+            .content(content)
+            .postTime(time)
+            .build());
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get(url, savedArticle.getId()));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value(title))
+            .andExpect(jsonPath("$.category").value(category))
+            .andExpect(jsonPath("$.content").value(content));
     }
 
     @DisplayName("updateArticle: 블로그 글을 수정한다.")
