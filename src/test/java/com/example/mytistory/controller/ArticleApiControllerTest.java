@@ -3,10 +3,14 @@ package com.example.mytistory.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.mytistory.domain.Article;
 import com.example.mytistory.dto.AddArticleRequest;
+import com.example.mytistory.dto.UpdateArticleRequest;
 import com.example.mytistory.repository.ArticleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
@@ -20,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -81,5 +86,74 @@ class ArticleApiControllerTest {
         assertThat(articles.get(0).getCategory()).isEqualTo(category);
         assertThat(articles.get(0).getPostTime()).isEqualTo(time);
     }
+
+    @DisplayName("findAllArticles: 블로그 글 목록 조회에 성공한다.")
+    @Test
+    public void findAllArticles() throws Exception{
+        // given
+        final String url = "/api/articles";
+        final String title = "title";
+        final String content = "content";
+        final String category = "category";
+        final LocalDateTime time = LocalDateTime.now();
+
+        articleRepository.save(Article.builder()
+            .title(title)
+            .content(content)
+            .category(category)
+            .postTime(time)
+            .build());
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(get(url)
+            .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].title").value(title))
+            .andExpect(jsonPath("$[0].category").value(category));
+    }
+
+    @DisplayName("updateArticle: 블로그 글을 수정한다.")
+    @Test
+    public void updateArticle() throws Exception{
+        // given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+        final String category = "category";
+        final LocalDateTime time = LocalDateTime.now();
+
+        Article article = articleRepository.save(Article.builder()
+            .title(title)
+            .content(content)
+            .category(category)
+            .postTime(time)
+            .build());
+
+        // new Article
+        final String newTitle = "new title";
+        final String newContent = "new content";
+        final String newCategory = "new category";
+
+        // dto
+        UpdateArticleRequest request = new UpdateArticleRequest(newTitle, newContent, newCategory);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(put(url, article.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        resultActions.andExpect(status().isOk());
+
+        Article newArticle = articleRepository.findById(article.getId()).get();
+
+        assertThat(newArticle.getTitle()).isEqualTo(newTitle);
+        assertThat(newArticle.getContent()).isEqualTo(newContent);
+        assertThat(newArticle.getCategory()).isEqualTo(newCategory);
+    }
+
 
 }
