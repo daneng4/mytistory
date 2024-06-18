@@ -9,15 +9,17 @@ import lombok.Getter;
 @Getter
 public class ArticleResponse {
 
-    // 글 목록에 대해서 조회하는 것이기 때문에 content는 받지 않도록 한다.
+    // 단일 블로그 글 조회
     private final String title;
     private final LocalDateTime postTime;
     private final String category;
+    private final String content;
 
     public ArticleResponse(Article article){
         this.title = article.getTitle();
         this.category = article.getCategory();
         this.postTime = article.getPostTime();
+        this.content = article.getContent();
     }
 
 }
