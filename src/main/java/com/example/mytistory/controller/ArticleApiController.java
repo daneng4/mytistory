@@ -2,6 +2,7 @@ package com.example.mytistory.controller;
 
 import com.example.mytistory.domain.Article;
 import com.example.mytistory.dto.AddArticleRequest;
+import com.example.mytistory.dto.AllArticleResponse;
 import com.example.mytistory.dto.ArticleResponse;
 import com.example.mytistory.dto.UpdateArticleRequest;
 import com.example.mytistory.service.ArticleService;
@@ -34,10 +35,10 @@ public class ArticleApiController {
     }
 
     @GetMapping("/api/articles")
-    public ResponseEntity<List<ArticleResponse>> findAllArticles(){
-        List<ArticleResponse> articles = articleService.findAll()
+    public ResponseEntity<List<AllArticleResponse>> findAllArticles(){
+        List<AllArticleResponse> articles = articleService.findAll()
             .stream()
-            .map(ArticleResponse::new)
+            .map(AllArticleResponse::new)
             .toList();
 
         return ResponseEntity.ok()
