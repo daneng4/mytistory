@@ -43,6 +43,8 @@ public class ArticleService {
     }
 
     // 블로그 글 삭제
-
+    public void delete(long id){
+        articleRepository.deleteById(id);
+    }
 
 }
