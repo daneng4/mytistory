@@ -80,7 +80,6 @@ class ArticleApiControllerTest {
         assertThat(articles.get(0).getTitle()).isEqualTo(title);
         assertThat(articles.get(0).getContent()).isEqualTo(content);
         assertThat(articles.get(0).getCategory()).isEqualTo(category);
-        assertThat(articles.get(0).getPostTime()).isEqualTo(time);
     }
 
     @DisplayName("findAllArticles: 블로그 글 목록 조회에 성공한다.")
@@ -97,7 +96,6 @@ class ArticleApiControllerTest {
             .title(title)
             .content(content)
             .category(category)
-            .postTime(time)
             .build());
 
         // when
@@ -125,7 +123,6 @@ class ArticleApiControllerTest {
             .title(title)
             .category(category)
             .content(content)
-            .postTime(time)
             .build());
 
         // when
@@ -153,7 +150,6 @@ class ArticleApiControllerTest {
             .title(title)
             .content(content)
             .category(category)
-            .postTime(time)
             .build());
 
         // new Article
@@ -193,7 +189,6 @@ class ArticleApiControllerTest {
             .title(title)
             .content(content)
             .category(category)
-            .postTime(time)
             .build());
 
         // when

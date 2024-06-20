@@ -22,7 +22,6 @@ public class AddArticleRequest {
             .title(title)
             .content(content)
             .category(category)
-            .postTime(postTime)
             .build();
     }
     
