@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
@@ -30,15 +32,19 @@ public class Article {
     @Column(name = "category", nullable = false)
     private String category;
 
-    @Column(name = "postTime")
-    private LocalDateTime postTime;
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Builder
-    Article(String title, String content, String category, LocalDateTime postTime){
+    Article(String title, String content, String category){
         this.title = title;
         this.content = content;
         this.category = category;
-        this.postTime = postTime;
     }
 
     public void update(String title, String content, String category){
